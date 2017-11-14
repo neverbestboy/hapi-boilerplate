@@ -7,7 +7,7 @@ module.exports = {
       port: 37017,
       user: '',
       password: '',
-      database: 'eknut',
+      database: 'waterline',
       migrate: 'alter'
     }
   }

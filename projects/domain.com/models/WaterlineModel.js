@@ -1,21 +1,14 @@
 module.exports = {
   connection: 'default',
-  tableName: 'Connections',
+  tableName: 'Waterline',
   attributes: {
     title: {
       type: 'string',
       required: true
     },
-    partnerId: {
-      required: true
-    },
     status: {
       type: 'boolean',
-      default: true
-    },
-    secretKey: {
-      type: 'string',
-      required: true
+      defaultsTo: true
     }
   }
 };
