@@ -1,0 +1,6 @@
+module.exports = {
+  SYSTEM_ERROR: 500,
+  INVALID_PARAMS: 400,
+  INVALID_TOKEN: 401,
+  REQUEST_SUCCESS: 1000  
+};

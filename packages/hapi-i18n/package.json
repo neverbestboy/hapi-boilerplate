@@ -1,0 +1,70 @@
+{
+  "_from": "hapi-i18n",
+  "_id": "hapi-i18n@1.0.5",
+  "_inBundle": false,
+  "_integrity": "sha1-QgPsmD4sn9vQgiass5cMxuiHU8E=",
+  "_location": "/hapi-i18n",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "hapi-i18n",
+    "name": "hapi-i18n",
+    "escapedName": "hapi-i18n",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/hapi-i18n/-/hapi-i18n-1.0.5.tgz",
+  "_shasum": "4203ec983e2c9fdbd08226acb3970cc6e88753c1",
+  "_spec": "hapi-i18n",
+  "_where": "/Volumes/neverbestboy/Workspaces/mecorp/eknut/nodejs",
+  "author": {
+    "name": "Kay Wolter"
+  },
+  "bugs": {
+    "url": "https://github.com/codeva/hapi-i18n/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "boom": "^2.6.1",
+    "hoek": "^2.11.1",
+    "i18n": "^0.5.0",
+    "lodash": "^3.5.0"
+  },
+  "deprecated": false,
+  "description": "Translation module for hapi based on mashpie's i18n module",
+  "devDependencies": {
+    "hapi": "^8.4.0",
+    "jade": "^1.9.2",
+    "joi": "^6.6.1",
+    "mocha": "^2.2.1",
+    "should": "^5.2.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "homepage": "https://github.com/codeva/hapi-i18n",
+  "keywords": [
+    "hapi",
+    "internationalization",
+    "localization",
+    "translation",
+    "nodejs"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "hapi-i18n",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/funktionswerk/hapi-i18n.git"
+  },
+  "scripts": {
+    "test": "mocha --recursive test"
+  },
+  "version": "1.0.5"
+}
