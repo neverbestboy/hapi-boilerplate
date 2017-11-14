@@ -98,7 +98,9 @@ const System = {
         const server = new Hapi.Server();
 
         const pathApp = `${PROJECTS_PATH}${project.basePath}/app.js`.replace('/system/../', '/');
-        if (System.RequireWithCheckExist(pathApp)) {
+        const app = System.RequireWithCheckExist(pathApp);
+        if (app) {
+          System.projects[project.basePath].app = app;
           require.cache[pathApp].exports = project;
         } else {
           return reject('Missing app.js');
@@ -404,6 +406,9 @@ const System = {
         server.start((err) => {
           if (err) {
             throw err;
+          }
+          if (_.isFunction(project.app.Start)) {
+            project.app.Start();
           }
           server.log('info', `[${project.title}] Server running at: ${server.info.uri}`);
         });
