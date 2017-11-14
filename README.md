@@ -1,2 +1,3 @@
 # hapi-boilerplate
-Starting a new project with HAPI
+Starting a new project API with HAPI
+
