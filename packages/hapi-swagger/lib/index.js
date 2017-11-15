@@ -31,6 +31,7 @@ const schema = Joi.object({
     uiCompleteScript: Joi.string().allow(null),
     xProperties: Joi.boolean(),
     reuseDefinitions: Joi.boolean(),
+    definitionPrefix: Joi.string(),
     deReference: Joi.boolean(),
     validatorUrl: Joi.string().allow(null),
     acceptToProduce: Joi.boolean(),
@@ -149,10 +150,7 @@ exports.register = function (plugin, options, next) {
                     method: 'GET',
                     path: settings.documentationPath,
                     config: {
-                        auth: settings.auth,
-                        tags: [
-                            'swagger'
-                        ]
+                        auth: settings.auth
                     },
                     handler: (request, reply) => {
 
@@ -167,10 +165,7 @@ exports.register = function (plugin, options, next) {
                     method: 'GET',
                     path: settings.swaggerUIPath + '{path*}',
                     config: {
-                        auth: settings.auth,
-                        tags: [
-                            'swagger'
-                        ]
+                        auth: false
                     },
                     handler: {
                         directory: {
@@ -183,13 +178,10 @@ exports.register = function (plugin, options, next) {
                     method: 'GET',
                     path: settings.swaggerUIPath + 'extend.js',
                     config: {
-                        auth: settings.auth,
+                        auth: false,
                         files: {
                             relativeTo: publicDirPath
-                        },
-                        tags: [
-                            'swagger'
-                        ]
+                        }
                     },
                     handler: {
                         file: 'extend.js'
@@ -203,10 +195,7 @@ exports.register = function (plugin, options, next) {
                     method: 'GET',
                     path: Path.join(settings.documentationPath, Path.sep, 'debug').split(Path.sep).join('/'),
                     config: {
-                        auth: settings.auth,
-                        tags: [
-                            'swagger'
-                        ]
+                        auth: settings.auth
                     },
                     handler: (request, reply) => {
 

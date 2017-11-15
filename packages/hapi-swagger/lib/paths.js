@@ -1,6 +1,7 @@
 'use strict';
 const Hoek = require('hoek');
 const Joi = require('joi');
+const fastSafeStringify = require('fast-safe-stringify');
 
 const Parameters = require('../lib/parameters');
 const Definitions = require('../lib/definitions');
@@ -80,7 +81,8 @@ internals.paths.prototype.build = function (routes) {
             order: Hoek.reach(routeOptions, 'order') || null,
             deprecated: Hoek.reach(routeOptions, 'deprecated') || null,
             id: Hoek.reach(routeOptions, 'id') || null,
-            groups: route.group
+            groups: route.group,
+            'x-meta': Hoek.reach(routeOptions, 'x-meta') || null
         };
 
 
@@ -117,14 +119,14 @@ internals.paths.prototype.build = function (routes) {
             // swap out any custom validation function for Joi object/string
             if (Utilities.isFunction(routeData[property])) {
                 if (property !== 'pathParams') {
-                    self.settings.log(['vaildation', 'warning'], 'Using a Joi.function for a query, header or payload is not supported.');
+                    self.settings.log(['validation', 'warning'], 'Using a Joi.function for a query, header or payload is not supported.');
                     if (property === 'payloadParams') {
                         routeData[property] = Joi.object().label('Hidden Model');
                     } else {
                         routeData[property] = Joi.object({ 'Hidden Model': Joi.string() });
                     }
                 } else {
-                    self.settings.log(['vaildation', 'error'], 'Using a Joi.function for a params is not supported and has been removed.');
+                    self.settings.log(['validation', 'error'], 'Using a Joi.function for a params is not supported and has been removed.');
                     routeData[property] = null;
                 }
             }
@@ -191,10 +193,7 @@ internals.paths.prototype.buildRoutes = function (routes) {
 
         // tags in swagger are used for grouping
         if (this.settings.grouping === 'tags') {
-            out.tags = route.tags.slice(0);
-            while (out.tags.indexOf('api') !== -1) {
-                out.tags.splice(out.tags.indexOf('api'), 1);
-            }
+            out.tags = route.tags.filter(this.settings.tagsGroupingFilter);
         }
         else {
             out.tags = route.groups;
@@ -333,6 +332,9 @@ internals.paths.prototype.buildRoutes = function (routes) {
         if (route.order) {
             out['x-order'] = route.order;
         }
+        if (route['x-meta']) {
+            out['x-meta'] = route['x-meta'];
+        }
         if (route.deprecated !== null) {
             out.deprecated = route.deprecated;
         }
@@ -386,7 +388,7 @@ internals.overload = function (base, priority) {
  */
 internals.hasFileType = function (route) {
 
-    let routeString = JSON.stringify(route);
+    let routeString = fastSafeStringify(route);
     return routeString.indexOf('swaggerType') > -1;
 };
 

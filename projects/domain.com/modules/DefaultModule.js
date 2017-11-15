@@ -3,21 +3,24 @@ const Server = require('../app').server;
 const WaterlineModel = require('../models/WaterlineModel');
 const MongooseModel = require('../models/MongooseModel');
 
-const chris = new MongooseModel({
-  name: 'Chris 1',
-  username: 'sevilayha 2',
-  password: 'password' 
-});
-// MongooseModel.find({ username: 'sevilayha' }, (err, result) => {
-//   result.
-//   console.log(result);
-// });
-
-MongooseModel.update({ username: 'sevilayha' }, { $set: { password: 'aaaaa' } }, (err, tank) => {
-  if (err) console.log(err);
-  console.log(tank);
-});
 module.exports.DefaultGet = async (request, reply) => {
+/*
+  const chris = new MongooseModel({
+    name: 'Chris 1',
+    username: 'sevilayha 2',
+    password: 'password' 
+  });
+  // MongooseModel.find({ username: 'sevilayha' }, (err, result) => {
+  //   result.
+  //   console.log(result);
+  // });
+  
+  MongooseModel.update({ username: 'sevilayha' }, { $set: { password: 'aaaaa' } }, (err, tank) => {
+    if (err) console.log(err);
+    console.log(tank);
+  });
+*/
+
   // Insert data test
   await WaterlineModel.create({
     title: 'TEST',

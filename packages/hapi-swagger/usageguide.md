@@ -1,11 +1,11 @@
-# 7.7.0 Usage Guide
+# 7.9.0 Usage Guide
 
 ### Content
 * [JSON body](#json-body)
 * [Form body](#form-body)
 * [Params query and headers](#params-query-and-headers)
 * [Naming](#naming)
-* [Grouping endpoints by path or tags](#Grouping-endpoints-by-path-or-tags)
+* [Grouping endpoints by path or tags](#grouping-endpoints-by-path-or-tags)
 * [Extending group information with tag objects](#extending-group-information-with-tag-objects)
 * [Ordering the endpoints within groups](#ordering-the-endpoints-within-groups)
 * [Rewriting paths and groupings](#rewriting-paths-and-groupings)
@@ -20,7 +20,7 @@
 * [Simplifying the JSON](#simplifying-the-json)
 * [Debugging](#debugging)
 * [Features from HAPI that cannot be ported to Swagger](#features-from-hapi-that-cannot-be-ported-to-swagger)
-* [Known issues with `jsonEditor`](#known-issues-with-jsonEditor)
+* [Known issues with `jsonEditor`](#known-issues-with-jsoneditor)
 * [Adding the interface into your own custom page](#adding-the-interface-into-your-own-custom-page)
 
 ### Links
@@ -31,7 +31,8 @@
 # JSON body
 The most common API endpoint with HAPI.js is one that POST's a JSON body.
 ```Javascript
-method: 'POST',
+{
+    method: 'POST',
     path: '/items',
     config: {
         handler: (request, reply) => { reply('OK'); },
@@ -39,7 +40,7 @@ method: 'POST',
         validate: {
             payload: Joi.object({
                 a: Joi.number(),
-                b: Joi.nunber()
+                b: Joi.number()
             })
         }
     }
@@ -63,7 +64,7 @@ If you wish to have hapi-swagger display a interface to POST data in `form-urlen
         validate: {
             payload: Joi.object({
                 a: Joi.number(),
-                b: Joi.nunber()
+                b: Joi.number()
             })
         }
     }
@@ -86,7 +87,7 @@ The plugin will take either a JavaScript or JOI object for `params` `query` and 
             },
             query: {
                 search: Joi.string()
-            }
+            },
             headers: Joi.object({
                 'authorization': Joi.string().required()
             }).unknown()
@@ -112,13 +113,14 @@ and chain the `label` function as below. __You need to give different structures
 validate: {
     payload: Joi.object({
         a: Joi.number(),
-        b: Joi.nunber()
+        b: Joi.number()
     }).label('Sum')
 }
 ```
 __NOTE: the plugin reuses "definition models" these describe each JSON object use by an API i.e. a "user". This feature
 was added to reduce the size of the JSON. The reuse of models can cause names to be reused as well. Please switch
-`options.reuseDefinitions` to `false` if you are nameing your JOI objects.__
+`options.reuseDefinitions` to `false` if you are naming your JOI objects. By default objects are named in a "Model #"
+ format. To use the `label`, specify `options.definitionPrefix` as `useLabel`.__
 
 
 
@@ -544,8 +546,9 @@ Not all the flexibility of HAPI and JOI can to ported over to the Swagger schema
 
 
 # Known issues with `jsonEditor`
-The `jsonEditor` is a new option in the latest version of SwaggerUI. It can provide a much enchanced UI, but I have found a few issues where it does not render correctly and can stop the rest of the UI from displaying.
+The `jsonEditor` is a new option in the SwaggerUI. It can provide a much enchanced UI, but I have found a few issues where it does not render correctly and can stop the rest of the UI from displaying.
 * Starting a JOI schema as an `Joi.array()` for a `payload` or  `response` object can cause the UI to break with the browser JavaScript error message `Uncaught TypeError: Cannot read property 'required' of undefined`.
+* If you wish to switch off dropdown menus for a given propty this can be achieved by adding chaining `.meta()` option to a JOI property i.e. `Joi.number().integer().positive().allow(0).meta({disableDropdown: true})`
 
 
 

@@ -16,9 +16,11 @@ module.exports = {
     'sortEndpoints': 'path',
     'sortPaths': 'unsorted',
     'grouping': 'path',
+    'tagsGroupingFilter': (tag) => tag !== 'api',
     'uiCompleteScript': null,
     'xProperties': true,
     'reuseDefinitions': true,
+    'definitionPrefix': 'default',
     'deReference': false,
     'validatorUrl': '//online.swagger.io/validator',
     'acceptToProduce': true,  // internal, NOT public

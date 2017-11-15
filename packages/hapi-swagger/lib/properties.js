@@ -111,7 +111,8 @@ internals.properties.prototype.parseProperty = function (name, joiObj, parent, p
 
     // add enum
     let describe = joiObj.describe();
-    if (Array.isArray(describe.valids) && describe.valids.length) {
+    const allowDropdown = !property['x-meta'] || !property['x-meta'].disableDropdown;
+    if (allowDropdown && Array.isArray(describe.valids) && describe.valids.length) {
         // fliter out empty values and arrays
         var enums = describe.valids.filter((item) => {
 
@@ -145,8 +146,7 @@ internals.properties.prototype.parseProperty = function (name, joiObj, parent, p
             if (useDefinitions === true) {
                 let refName = this.definitions.append(name, property, this.getDefinitionCollection(isAlt), this.settings);
                 property = {
-                    '$ref': this.getDefinitionRef(isAlt) + refName,
-                    'type': 'object'
+                    '$ref': this.getDefinitionRef(isAlt) + refName
                 };
             }
 
@@ -157,8 +157,7 @@ internals.properties.prototype.parseProperty = function (name, joiObj, parent, p
                 let objectSchema = { 'type': 'object', 'properties': {} };
                 let refName = this.definitions.append(name, objectSchema, this.getDefinitionCollection(isAlt), this.settings);
                 property = {
-                    '$ref': this.getDefinitionRef(isAlt) + refName,
-                    'type': 'object'
+                    '$ref': this.getDefinitionRef(isAlt) + refName
                 };
             }
 
@@ -495,12 +494,13 @@ internals.properties.prototype.parseAlternatives = function (property, joiObj, n
         property = this.parseProperty(childName, child, property, parameterType, useDefinitions, false);
 
         // create the alternatives without appending to the definitionCollection
+        // if (property && this.settings.xProperties === true) {
         if (this.settings.xProperties === true) {
             let altArray = joiObj._inner.matches.map((obj) => {
                 let altName = (Utilities.geJoiLabel(obj.schema) || name);
                 //name, joiObj, parent, parameterType, useDefinitions, isAlt
                 return this.parseProperty(altName, obj.schema, property, parameterType, useDefinitions, true);
-            });
+            }).filter((obj) => obj);
             property['x-alternatives'] = Hoek.clone(altArray);
         }
     }
@@ -514,6 +514,7 @@ internals.properties.prototype.parseAlternatives = function (property, joiObj, n
         property = this.parseProperty(childName, child, property, parameterType, useDefinitions, false);
 
         // create the alternatives without appending to the definitionCollection
+        //if (property && this.settings.xProperties === true) {
         if (this.settings.xProperties === true) {
             let altArray = joiObj._inner.matches
                 .reduce((res, obj) => {
