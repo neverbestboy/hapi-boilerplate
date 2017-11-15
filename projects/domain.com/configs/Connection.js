@@ -10,5 +10,12 @@ module.exports = {
       database: 'waterline',
       migrate: 'alter'
     }
+  },
+  mongoose: {
+    engine: 'mongoose',
+    options: {
+      uri: 'mongodb://localhost:37017/mongoose',
+      useMongoClient: true
+    }
   }
 };

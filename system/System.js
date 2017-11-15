@@ -11,6 +11,7 @@ const HapiSwagger = require('../packages/hapi-swagger');
 const Lcfirst = require('lcfirst');
 const I18n = require('../packages/hapi-i18n');
 const Waterline = require('./Waterline');
+const Mongoose = require('./Mongoose');
 const Config = require('./Config');
 
 const PROJECTS_PATH = `${__dirname}/../projects/`;
@@ -448,6 +449,8 @@ const System = {
           const engine = _.get(System.connections[`${project.basePath}-${model.connection}`], 'engine', false);
           if (engine === 'waterline') {
             Waterline.ApplyModel(model, pathModel, project.basePath);
+          } else if (engine === 'mongoose') {
+            Mongoose.ApplyModel(model, pathModel, project.basePath);
           }
           return cb();
         }, (err) => {
@@ -465,6 +468,7 @@ const System = {
   StartEngineDb: async () => {
     return new Promise(async (resolve, reject) => {
       await Waterline.Start(System.connections);
+      await Mongoose.Start(System.connections);
       resolve(true);
     });
   }

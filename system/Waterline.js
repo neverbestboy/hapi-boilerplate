@@ -41,7 +41,6 @@ module.exports.Start = (connections) => {
       },
       connections: store.connections
     };
-
     _.forEach(store.models, (v, k) => {
       const model = v.model;
       let migrate = _.get(store.connections[`${v.projectBasePath}-${model.connection}`], 'migrate', '');
@@ -75,61 +74,4 @@ module.exports.Start = (connections) => {
     });
   });
 };
-// let instanceModels;
-// function requireUncached(module) {
-//   delete require.cache[require.resolve(module)];
-//   return require(module);
-// }
-// module.exports = (model, filename) => {
-//   const modelName = Path.basename(filename, 'Model.js');
-//   waterline.loadCollection(Waterline.Collection.extend(model));
-// };
-
-// module.exports.ApplyModel = (model, path) => {
-
-// };
-
-// module.exports.Create = (instanceWaterline) => {
-//   waterline = instanceWaterline;
-//   waterline = new Waterline();
-//   return waterline;
-// };
-
-// module.exports.Start = () => {
-//   return new Promise((resolve, reject) => {
-//     const configDb = {
-//       adapters: {
-//         mysql: mysqlAdapter,
-//         mongo: mongoAdapter
-//       },
-//       connections: {
-//         default: {
-//           adapter: 'mongo',
-//           host: 'localhost',
-//           port: 37017,
-//           user: '',
-//           password: '',
-//           database: 'eknut'
-//         },
-//         partnerEknut: {
-//           adapter: 'mongo',
-//           host: 'localhost',
-//           port: 37017,
-//           user: '',
-//           password: '',
-//           database: 'eknut_partner'
-//         }
-//       }
-//     };
-//     waterline.initialize(configDb, (err, models) => {
-//       if (err) {
-//         throw err;
-//       }
-  
-//       instanceModels = models.collections.connections;
-
-//       resolve(true);
-//     });
-//   });
-// };
 
