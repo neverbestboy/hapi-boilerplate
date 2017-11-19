@@ -1,10 +1,10 @@
 const Code = require('../constants/ResponseCodeConstant');
 const Server = require('../app').server;
 const WaterlineModel = require('../models/WaterlineModel');
-const MongooseModel = require('../models/MongooseModel');
 
 module.exports.DefaultGet = async (request, reply) => {
 /*
+  const MongooseModel = require('../models/MongooseModel');
   const chris = new MongooseModel({
     name: 'Chris 1',
     username: 'sevilayha 2',

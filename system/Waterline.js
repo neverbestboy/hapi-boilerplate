@@ -45,11 +45,10 @@ module.exports.Start = (connections) => {
       const model = v.model;
       let migrate = _.get(store.connections[`${v.projectBasePath}-${model.connection}`], 'migrate', '');
       if (migrate === '') {
-        if (Env === 'prod') {
-          migrate = 'safe';
-        } else {
-          migrate = 'alter';
-        }
+        migrate = 'alter';
+      }
+      if (Env !== 'dev') {
+        migrate = 'safe';
       }
       const identity = Randomstring.generate({
         length: 12,
