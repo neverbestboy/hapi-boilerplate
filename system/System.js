@@ -14,7 +14,7 @@ const Waterline = require('./Waterline');
 const Mongoose = require('./Mongoose');
 const Config = require('./Config');
 
-const PROJECTS_PATH = `${__dirname}/../projects/`;
+const PROJECTS_PATH = `${__dirname}/../projects/`.replace('/system/../', '/');
 
 const System = {
 
@@ -38,6 +38,12 @@ const System = {
                                     .directory()
                                     .depth(0)
                                     .findSync();
+      } else {
+        _.forEach(projectStart, (v) => {
+          pathProjectList.push(
+            PROJECTS_PATH + v
+          );
+        });
       }
       
       Async.forEachOf(pathProjectList, (v, k, callback) => {
@@ -98,7 +104,7 @@ const System = {
       Async.forEachOf(System.projects, (project, k, callback) => {
         const server = new Hapi.Server();
 
-        const pathApp = `${PROJECTS_PATH}${project.basePath}/app.js`.replace('/system/../', '/');
+        const pathApp = `${PROJECTS_PATH}${project.basePath}/app.js`;
         const app = System.RequireWithCheckExist(pathApp);
         if (app) {
           System.projects[project.basePath].app = app;
