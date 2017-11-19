@@ -169,6 +169,15 @@ const System = {
         if (!languageConfig) {
           return reject(`Can't found language config at project ${project.title}`);
         }
+        if (project.isActiveHttp === false) {
+          if (languageConfig.active === true) {
+            server.log('warn', `Can't active language when not active http at project ${project.title}`);
+          }
+          return callback();
+        }
+        if (languageConfig.active === false) {
+          return callback();
+        }
         const languageConfigOptions = languageConfig.options;
         languageConfigOptions.directory = `${PROJECTS_PATH}${project.basePath}/locales`;
         server.register({
@@ -197,7 +206,7 @@ const System = {
         }
         if (project.isActiveHttp === false) {
           if (docConfig.active === true) {
-            server.log('warn', `Không thể kích hoạt tài liệu khi không active Http tại dự án ${project.title}`);
+            server.log('warn', `Can't active document when not active http at project ${project.title}`);
           }
           return callback();
         }
@@ -234,7 +243,7 @@ const System = {
         }
         if (project.isActiveHttp === false) {
           if (pluginConfig.active === true) {
-            server.log('warn', `Không thể đăng ký plugin khi không active Http tại dự án ${project.title}`);
+            server.log('warn', `Can't active plugin when not active http at project ${project.title}`);
           }
           return callback();
         }
@@ -264,7 +273,7 @@ const System = {
         }
         if (project.isActiveHttp === false) {
           if (authenticationConfig.active === true) {
-            server.log('warn', `Không thể kích hoạt Authentication khi không active Http tại dự án ${project.title}`);
+            server.log('warn', `Can't active authentication when not active http at project ${project.title}`);
           }
           return callback();
         }
@@ -311,7 +320,7 @@ const System = {
         }
         if (project.isActiveHttp === false) {
           if (routerConfig.active === true) {
-            server.log('warn', `Can't active router when not active http at project  ${project.title}`);
+            server.log('warn', `Can't active router when not active http at project ${project.title}`);
           }
           return callback();
         }
@@ -403,16 +412,18 @@ const System = {
   StartHapiServer: async () => {
     return new Promise(async (resolve, reject) => {
       Async.forEachOf(System.projects, (project, k, callback) => {
-        const server = project.server;
-        server.start((err) => {
-          if (err) {
-            throw err;
-          }
-          if (_.isFunction(project.app.Start)) {
-            project.app.Start();
-          }
-          server.log('info', `[${project.title}] Server running at: ${server.info.uri}`);
-        });
+        if (project.isActiveHttp === true) {
+          const server = project.server;
+          server.start((err) => {
+            if (err) {
+              throw err;
+            }
+            if (_.isFunction(project.app.Start)) {
+              project.app.Start();
+            }
+            server.log('info', `[${project.title}] Server running at: ${server.info.uri}`);
+          });
+        }
         return callback();
       }, (err) => {
         if (err) return reject(err);
