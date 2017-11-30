@@ -1,7 +1,7 @@
 const Code = require('../constants/ResponseCodeConstant');
 const Server = require('../app').server;
 const WaterlineModel = require('../models/WaterlineModel');
-const DemoModel = require('../models/Elasticsearch/DemoModel');
+const DemoModel = require('../models/elasticsearch/DemoModel');
 
 module.exports.DefaultGet = async (request, reply) => {
 /*

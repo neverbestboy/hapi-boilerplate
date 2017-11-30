@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const ResultHandlerFactory = require('./Elasticsearch/ResultHandlerFactory');
-const RequestHandler = require('./Elasticsearch/RequestHandler');
+const ResultHandlerFactory = require('./elasticsearch/ResultHandlerFactory');
+const RequestHandler = require('./elasticsearch/RequestHandler');
 const Urlencode = require('urlencode');
 const UrlJoin = require('url-join');
 
@@ -62,7 +62,6 @@ module.exports.Start = (connections) => {
 
     _.forEach(store.models, (v) => {
       try {
-        // console.dir(require.cache[v.path].exports);
         const model = require(v.path);
         _.forEach(model, (func, funcName) => {
           if (_.isFunction(func) === true) {
