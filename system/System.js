@@ -12,6 +12,7 @@ const Lcfirst = require('lcfirst');
 const I18n = require('../packages/hapi-i18n');
 const Waterline = require('./Waterline');
 const Mongoose = require('./Mongoose');
+const Elasticsearch = require('./Elasticsearch');
 const Config = require('./Config');
 
 const PROJECTS_PATH = `${__dirname}/../projects/`.replace('/system/../', '/');
@@ -468,6 +469,8 @@ const System = {
             Waterline.ApplyModel(model, pathModel, project.basePath);
           } else if (engine === 'mongoose') {
             Mongoose.ApplyModel(model, pathModel, project.basePath);
+          } else if (engine === 'elasticsearch') {
+            Elasticsearch.ApplyModel(model, pathModel, project.basePath);
           }
           return cb();
         }, (err) => {
@@ -486,6 +489,7 @@ const System = {
     return new Promise(async (resolve, reject) => {
       await Waterline.Start(System.connections);
       await Mongoose.Start(System.connections);
+      await Elasticsearch.Start(System.connections);
       resolve(true);
     });
   }

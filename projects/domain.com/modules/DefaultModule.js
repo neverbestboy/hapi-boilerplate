@@ -1,6 +1,7 @@
 const Code = require('../constants/ResponseCodeConstant');
 const Server = require('../app').server;
 const WaterlineModel = require('../models/WaterlineModel');
+const DemoModel = require('../models/Elasticsearch/DemoModel');
 
 module.exports.DefaultGet = async (request, reply) => {
 /*
@@ -20,7 +21,7 @@ module.exports.DefaultGet = async (request, reply) => {
     console.log(tank);
   });
 */
-
+  await DemoModel.getDemo();
   // Insert data test
   await WaterlineModel.create({
     title: 'TEST',
@@ -33,6 +34,7 @@ module.exports.DefaultGet = async (request, reply) => {
   
   Server.log('info', get);
   Server.log('info', 'test');
+  
   return reply({
     number: 1
   }).code(Code.REQUEST_SUCCESS);

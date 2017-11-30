@@ -17,5 +17,15 @@ module.exports = {
       uri: 'mongodb://localhost:37017/mongoose',
       useMongoClient: true
     }
+  },
+  elasticsearch: {
+    engine: 'elasticsearch',
+    options: {
+      url: 'http://domain.com',
+      auth: {
+        username: 'username',
+        password: 'password'
+      }
+    }
   }
 };

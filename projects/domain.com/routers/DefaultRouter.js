@@ -19,7 +19,7 @@ routers.push({
       }
     },
     response: {
-      // isAppendStatus: false
+      // isAppendStatus: false,
       status: {
         [Code.REQUEST_SUCCESS]: Joi.object({
           number: Joi.number()
