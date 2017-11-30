@@ -1,5 +1,7 @@
 const Path = require('path');
 const _ = require('lodash');
+const Mongoose = require('mongoose');
+
 // const Randomstring = require('randomstring');
 // const Env = require('get-env')();
 
@@ -29,18 +31,16 @@ module.exports.Start = (connections) => {
       try {
         if (v.engine === 'mongoose') {
           store.connections[k] = v.options;
-          mongoose[k] = require('mongoose');
-          mongoose[k].Promise = global.Promise;
           const options = _.clone(v.options);
           delete options.uri;
-          mongoose[k].connect(v.options.uri, options);
+          mongoose[k] = Mongoose.createConnection(v.options.uri, options);
+          mongoose[k].Promise = global.Promise;
         }
         return true;
       } catch (e) {
         return reject(e);
       }
     });
-
     _.forEach(store.models, (v) => {
       try {
         const model = v.model;
