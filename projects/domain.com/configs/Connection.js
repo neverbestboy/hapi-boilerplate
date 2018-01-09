@@ -21,10 +21,23 @@ module.exports = {
   elasticsearch: {
     engine: 'elasticsearch',
     options: {
-      url: 'http://domain.com',
+      url: 'http://mmm.9link.mobi',
       auth: {
-        username: 'username',
-        password: 'password'
+        username: 'elastic',
+        password: 'changeme'
+      }
+    }
+  },
+  cache: {
+    engine: 'cache',
+    options: {
+      adapter: 'redis',
+      config: {
+        port: 7379,
+        host: '127.0.0.1',
+        // family: 4,
+        // password: 'auth',
+        db: 0
       }
     }
   }

@@ -2,6 +2,7 @@ const Path = require('path');
 const _ = require('lodash');
 const Mongoose = require('mongoose');
 
+Mongoose.Promise = global.Promise;
 // const Randomstring = require('randomstring');
 // const Env = require('get-env')();
 
@@ -34,7 +35,6 @@ module.exports.Start = (connections) => {
           const options = _.clone(v.options);
           delete options.uri;
           mongoose[k] = Mongoose.createConnection(v.options.uri, options);
-          mongoose[k].Promise = global.Promise;
         }
         return true;
       } catch (e) {
@@ -45,6 +45,8 @@ module.exports.Start = (connections) => {
       try {
         const model = v.model;
         const connection = `${v.projectBasePath}-${model.connection}`;
+        model.attributes.options.collection = model.tableName;
+        model.attributes.options.versionKey = false;
         require.cache[v.path].exports = mongoose[connection].model(model.tableName, model.attributes);
       } catch (e) {
         reject(e);

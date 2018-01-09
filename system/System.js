@@ -13,6 +13,8 @@ const I18n = require('../packages/hapi-i18n');
 const Waterline = require('./Waterline');
 const Mongoose = require('./Mongoose');
 const Elasticsearch = require('./Elasticsearch');
+const Cache = require('./Cache');
+
 const Config = require('./Config');
 
 const PROJECTS_PATH = `${__dirname}/../projects/`.replace('/system/../', '/');
@@ -105,7 +107,7 @@ const System = {
       Async.forEachOf(System.projects, (project, k, callback) => {
         const server = new Hapi.Server();
 
-        const pathApp = `${PROJECTS_PATH}${project.basePath}/app.js`;
+        const pathApp = Path.resolve(`${PROJECTS_PATH}${project.basePath}/app.js`);        
         const app = System.RequireWithCheckExist(pathApp);
         if (app) {
           System.projects[project.basePath].app = app;
@@ -419,8 +421,8 @@ const System = {
   StartHapiServer: async () => {
     return new Promise(async (resolve, reject) => {
       Async.forEachOf(System.projects, (project, k, callback) => {
+        const server = project.server;
         if (project.isActiveHttp === true) {
-          const server = project.server;
           server.start((err) => {
             if (err) {
               throw err;
@@ -430,6 +432,8 @@ const System = {
             }
             server.log('info', `[${project.title}] Server running at: ${server.info.uri}`);
           });
+        } else {
+          server.log('info', `[${project.title}] loaded !`);
         }
         return callback();
       }, (err) => {
@@ -485,11 +489,45 @@ const System = {
     });
   },
 
+  ApplyCache: async () => {
+    return new Promise(async (resolve, reject) => {
+      Async.forEachOf(System.projects, (project, k, callback) => {
+        const pathCacheList = Filehound.create()
+                                        .path(`${PROJECTS_PATH}${project.basePath}/caches`)
+                                        .ext('.js')
+                                        .glob('*Cache.js')
+                                        .findSync();
+        Async.forEachOf(pathCacheList, (pathCache, key, cb) => {  
+          const cache = System.RequireWithCheckExist(pathCache);
+          const engine = _.get(System.connections[`${project.basePath}-${cache.connection}`], 'engine', false);
+          if (engine === 'cache') {
+            Cache.ApplyCache(cache, pathCache, project.basePath);
+          } 
+          return cb();
+        }, (err) => {
+          if (err) return reject(err);
+          return true;
+        });   
+        return callback();
+      }, (err) => {
+        if (err) return reject(err);
+        return resolve(System.projects);
+      });
+    });
+  },
+
   StartEngineDb: async () => {
     return new Promise(async (resolve, reject) => {
       await Waterline.Start(System.connections);
       await Mongoose.Start(System.connections);
       await Elasticsearch.Start(System.connections);
+      resolve(true);
+    });
+  },
+
+  StartEngineCache: async () => {
+    return new Promise(async (resolve, reject) => {
+      await Cache.Start(System.connections);
       resolve(true);
     });
   }
@@ -561,9 +599,33 @@ module.exports = {
         },
         // endregion
        
+        // region Apply Cache
+        (callback) => {
+          System.ApplyCache()
+          .then(() => {
+            callback(null);
+          })
+          .catch((error) => {
+            callback(error);
+          });
+        },
+        // endregion
+
         // region Start Engine Db
         (callback) => {
           System.StartEngineDb()
+          .then(() => {
+            callback(null);
+          })
+          .catch((error) => {
+            callback(error);
+          });
+        },
+        // endregion
+
+        // region Start Engine Cache
+        (callback) => {
+          System.StartEngineCache()
           .then(() => {
             callback(null);
           })
